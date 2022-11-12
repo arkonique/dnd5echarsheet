@@ -15,7 +15,7 @@ function Login(props){
     async function sendLogin(){
         const check = await verifyUser(loginData.uname,loginData.password);
          if (!check) {
-            document.cookie = "login=true";
+            document.cookie = "login=true"; ///////////////////////////////////////////// Change cookies to session variables through API (set session variable here)
             props.checkLogin(true);
          }
          else {
@@ -24,7 +24,7 @@ function Login(props){
                 msg="Please fill out both fields"
             }
             else{
-                msg=check==1?"Username (or both username and password) is incorrect":"Password you entered is incorrect";
+                msg=check===1?"Username (or both username and password) is incorrect":"Password you entered is incorrect";
             }
             setMessage(msg);
          }

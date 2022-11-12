@@ -1,14 +1,10 @@
 import React from 'react'
 import Info from './Info'
 import Portrait from './Portrait'
-import {postData} from '../functions'
 
 export default function Personal() {
 
     // Load dataArray from API instead of hardcoding. This is just a test
-    const token="a1234sferds459ifs";
-    const charname="Blastoise";
-    
     const dataArray = {
         portrait:"logo512.png",
         playname:"Player",
@@ -45,7 +41,7 @@ export default function Personal() {
         // End API call
 
         data.portrait=e.files[0].name;
-        console.log(data)
+        console.log(selectedFile)
     }
 
 

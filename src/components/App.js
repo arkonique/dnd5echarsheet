@@ -22,9 +22,9 @@ function App() {
     setsignUpInSwitch("in");
   }
 
-  const cookies = parseCookies(document.cookie);
-  
-  if (login===false || cookies.login!=='true'){
+  const cookies = parseCookies(document.cookie); //////////////////////////////////////////// Use session variables through API (get session variable here)
+
+  if (login===false && cookies.login!=='true'){
     if (singUpInSwitch==="in"){
       return(
         <div className="form-login">
@@ -48,7 +48,7 @@ function App() {
       )
     }
   }
-  else if (login===true && cookies.login==='true'){
+  else{
     return (<Sheet />);
   }
 }

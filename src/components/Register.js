@@ -1,33 +1,52 @@
 import React from 'react'
-import { verifyUser } from '../functions';
+import { checkOcurrence, encodePassword, postData, verifyUser, randomBytesAsync } from '../functions';
 import Info from "./Info";
 
 export default function Register(props){
 
-    const [loginData,setLoginData] = React.useState(['','','','','',''])
+    const [registerData,setRegisterData] = React.useState({uname:'',password:'',name:'',token:'',dmcode:'',salt:''}) // In order of form appearance
     const [message,setMessage] = React.useState("");
+    
     function updateData(e){
-        var data = loginData
-        data[e.id] = e.value
-        setLoginData(data)
+        var data = registerData;
+        data[e.id] = e.value;
+        setRegisterData(data);
     }
     
     async function sendRegister(){
-        /** 
-         * 1. Do a verifyuser without a passwordcheck for username availability
-         * 2. Check if DM code is valid
-         * 3. Generate encoded password+salt
-         * 4. Check if none of the fields are empty
-         * 5. If 1 2 and 4 are all passed, then send data to API through the user/add endpoint
-         * 6. Create login cookie
-         */
-        const check = await verifyUser(loginData.uname,loginData.password);
-        if (!check) {
-            // also create login cookie
+
+        const check = await verifyUser(registerData.uname,'');
+        const codeList = await postData('http://localhost/dnd_api/index.php/dm/codes');
+        const n = checkOcurrence(registerData.dmcode,codeList);
+        const newpw = await encodePassword(registerData.password);
+        var data = registerData;
+        data.password=newpw[0];
+        data.salt=newpw[1];
+        data.token = `u${(await randomBytesAsync(21)).toString('hex')}.${(await randomBytesAsync(3)).toString('hex')}`
+        const dataArr = Object.values(data)
+        var msg="";
+        let allFields;
+        setRegisterData(data);
+        
+        if (registerData.uname==='' || registerData.password==='' || registerData.name==='' || registerData.dmcode===''){
+            allFields = 0;
+        }
+        else{
+            allFields = 1;
+        }
+
+        const newCheck = allFields!==1 ? 1 : check!==1 ? 2 : n!==1 ? 3 : 0;
+        if (newCheck===1) {msg="Please fill out all the fields"}
+        else if (newCheck===2) {msg="Username not available"}
+        else if (newCheck===3) {msg="Invalid DM code"}
+
+        if (!newCheck) {
+            console.log(registerData)
+            postData('http://localhost/dnd_api/index.php/user/add',{data: dataArr})
+            document.cookie = "login=true"; ///////////////////////////////////////////// Change cookies to session variables through API (set session variable here)
             props.checkLogin(true);
         }
         else {
-            const msg=check==1?"Username (or both username and password) is incorrect":"Password you entered is incorrect";
             setMessage(msg);
         }
     }
