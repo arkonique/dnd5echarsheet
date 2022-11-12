@@ -15,7 +15,7 @@ function Login(props){
     async function sendLogin(){
         const check = await verifyUser(loginData.uname,loginData.password);
          if (!check) {
-            document.cookie = "login=true"; ////////////////////////////////////////// Change cookies to session variables through API (set session variable here)
+            document.cookie = "login=true"; /////////////////////////////////////////// Change cookies to session variables through API (set session variable here)
             props.checkLogin(true);
          }
          else {
