@@ -1,21 +1,7 @@
 import React from 'react'
 import Info from './Info'
 import Portrait from './Portrait'
-
-async function postData(url = '', data = {}) {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-    return response.json();
-  }
-
-  postData('http://localhost/dnd_api/index.php/user/get',{u: "ark",p: "qwer1234"}).then((data) => {
-    console.log(data); // JSON data parsed by `data.json()` call
-  });
+import {postData} from '../functions'
 
 export default function Personal() {
 
@@ -47,7 +33,6 @@ export default function Personal() {
         var data = personalData
         data[e.id] = e.value
         //data[this.id] = e;
-        console.log(data)
         setPersonalData(data)
     }
 
