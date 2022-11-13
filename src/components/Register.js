@@ -16,7 +16,7 @@ export default function Register(props){
     async function sendRegister(){
 
         const check = await verifyUser(registerData.uname,'');
-        const codeList = await postData('http://localhost/dnd_api/index.php/dm/codes');
+        const codeList = await postData('http://localhost/dnd_api/accessnode/dm/codes');
         const n = checkOcurrence(registerData.dmcode,codeList);
         const newpw = await encodePassword(registerData.password);
         var data = registerData;
@@ -42,7 +42,7 @@ export default function Register(props){
 
         if (!newCheck) {
             console.log(registerData)
-            postData('http://localhost/dnd_api/index.php/user/add',{data: dataArr})
+            postData('http://localhost/dnd_api/accessnode/user/add',{data: dataArr})
             document.cookie = "login=true"; ///////////////////////////////////////////// Change cookies to session variables through API (set session variable here)
             props.checkLogin(true);
         }
