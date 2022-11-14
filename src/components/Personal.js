@@ -2,28 +2,10 @@ import React from 'react'
 import Info from './Info'
 import Portrait from './Portrait'
 
-export default function Personal() {
-
-    // Load dataArray from API instead of hardcoding. This is just a test
-    const dataArray = {
-        portrait:"logo512.png",
-        playname:"Player",
-        charname:"Character",
-        race:"Race",
-        background:"Background",
-        alignment:"Alignment",
-        age:26,
-        height:"6'11\"",
-        weight:365,
-        dmarks:"Distinguishing Marks",
-        eyes:"Eyes",
-        skin:"Skin",
-        hair:"Hair",
-        scars:"Scars"
-    } // API call ends here 
+export default function Personal(props) {
 
     const [selectedFile, setSelectedFile] = React.useState(null);
-    const [personalData,setPersonalData] = React.useState(dataArray)
+    const [personalData,setPersonalData] = React.useState(props.dataArray)
     
     function updateData(e) {
         var data = personalData
