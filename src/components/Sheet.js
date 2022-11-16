@@ -17,7 +17,7 @@ import Personal from "./Personal";
         skin:"Skin",
         hair:"Hair",
         scars:"Scars"
-    } // API call ends here 
+    } // API call ends here \\
 
     
 
