@@ -23,6 +23,8 @@ export function checkOcurrence(string,array) {
     return array.filter((e) =>{return e===string}).length
 }
 
+
+// User login verification functions
 export const randomBytesAsync = promisify(randomBytes);
 export const pbkdf2Async = promisify(pbkdf2);
 
@@ -42,15 +44,33 @@ export async function verifyUser(username,password) {
     const salt = (await postData('http://localhost/dnd_api/accessnode/user/salt',{u:username}))[0].salt;
     const buffer = (await pbkdf2Async(password, salt, 100000, 502,  'sha512')).toString('hex');
     const check = (await postData('http://localhost/dnd_api/accessnode/user/get',{u:username,p:buffer}))
-    return check==="match"? 0:2
+    return check!=="nomatch"? [0,check]:[2,{}]
   }
   else {
-    return 1 //0=username and password are correct, 1=username does not exist, 2=password is wrong
+    return [1,{}] //0=username and password are correct, 1=username does not exist, 2=password is wrong
   }
 
 }
 
+
+// Cookie functions
 export function parseCookies(cookieString) {
   const cookies=Object.assign({},...cookieString.split(',').map((e) => {const f={}; f[e.split('=')[0]]=e.split('=')[1];return f}));
   return cookies;
+}
+
+export function generateCookieString(cookies) {
+  return Object.entries(cookies).map((e) => `${e[0]}=${e[1]}`).join();
+}
+
+export function deleteCookie(name,cookieString) {
+  let cookies = parseCookies(cookieString);
+  delete cookies[name];
+  document.cookie = generateCookieString(cookies);
+}
+
+export function setCookie(name,value,cookieString) {
+  let cookies = parseCookies(cookieString);
+  cookies[name]=value;
+  document.cookie = generateCookieString(cookies);
 }

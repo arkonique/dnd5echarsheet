@@ -1,5 +1,6 @@
 import React from 'react'
 import Personal from "./Personal";
+import Classes from "./Classes";
 
     // Load dataArray from API instead of hardcoding. This is just a test
     const personalArray = {
@@ -17,7 +18,10 @@ import Personal from "./Personal";
         skin:"Skin",
         hair:"Hair",
         scars:"Scars"
-    } // API call ends here \\
+    } 
+    
+    const classArray = {}
+    // API call ends here \\
 
     
 

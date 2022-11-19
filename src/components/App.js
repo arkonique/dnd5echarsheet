@@ -1,17 +1,30 @@
 import React from 'react';
-import { parseCookies } from '../functions';
+import { parseCookies, setCookie } from '../functions';
 import Login from './Login';
 import Register from './Register';
+import Characters from './Characters';
 import Sheet from './Sheet'
 
 function App() {
   const [login,setLogin] = React.useState(false)
   const [singUpInSwitch,setsignUpInSwitch] = React.useState("in");
+  const [token,setToken] = React.useState("");
+  const [charSelected,setCharSelected] = React.useState(false);
+  const [charSrno,setCharSrno] = React.useState(0);
   
-  function changeLogState(e){
-    if (e===true){
+  async function changeLogState(e){
+    if (e[0]===true){
+      const uToken = e[1][0].token;
+      setCookie('token',uToken,document.cookie);
+      setToken(uToken);
       setLogin(true)
     }
+  }
+
+  function makeSelection(e){
+    setCookie('srno',e,document.cookie);
+    setCharSelected(true);
+    setCharSrno(e);
   }
   
   function switchUp(){
@@ -49,7 +62,12 @@ function App() {
     }
   }
   else{
-    return (<Sheet />);
+    if (charSelected===true){
+      return (<Sheet token={charSrno}/>);
+    }
+    else{
+      return (<Characters token={token} checkSelection={(e) => makeSelection(e)}/>);
+    }
   }
 }
 

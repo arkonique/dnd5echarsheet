@@ -1,5 +1,5 @@
 import React from 'react'
-import { verifyUser } from '../functions';
+import { parseCookies, setCookie, verifyUser } from '../functions';
 import Info from "./Info";
 
 function Login(props){
@@ -14,9 +14,9 @@ function Login(props){
 
     async function sendLogin(){
         const check = await verifyUser(loginData.uname,loginData.password);
-         if (!check) {
-            document.cookie = "login=true"; /////////////////////////////////////////// Change cookies to session variables through API (set session variable here)
-            props.checkLogin(true);
+         if (!check[0]) {
+            setCookie('login',true,document.cookie); /////////////////////////////////////////// Change cookies to session variables through API (set session variable here)       
+            props.checkLogin([true,check[1]]);
          }
          else {
             let msg;
@@ -24,7 +24,7 @@ function Login(props){
                 msg="Please fill out both fields"
             }
             else{
-                msg=check===1?"Username (or both username and password) is incorrect":"Password you entered is incorrect";
+                msg=check[0]===1?"Username (or both username and password) is incorrect":"Password you entered is incorrect";
             }
             setMessage(msg);
          }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { checkOcurrence, encodePassword, postData, verifyUser, randomBytesAsync } from '../functions';
+import { checkOcurrence, encodePassword, postData, verifyUser, randomBytesAsync, setCookie } from '../functions';
 import Info from "./Info";
 
 export default function Register(props){
@@ -35,16 +35,15 @@ export default function Register(props){
             allFields = 1;
         }
 
-        const newCheck = allFields!==1 ? 1 : check!==1 ? 2 : n!==1 ? 3 : 0;
+        const newCheck = allFields!==1 ? 1 : check[0]!==1 ? 2 : n!==1 ? 3 : 0;
         if (newCheck===1) {msg="Please fill out all the fields"}
         else if (newCheck===2) {msg="Username not available"}
         else if (newCheck===3) {msg="Invalid DM code"}
 
         if (!newCheck) {
-            console.log(registerData)
             postData('http://localhost/dnd_api/accessnode/user/add',{data: dataArr})
-            document.cookie = "login=true"; ///////////////////////////////////////////// Change cookies to session variables through API (set session variable here)
-            props.checkLogin(true);
+            setCookie('login',true,document.cookie) ///////////////////////////////////////////// Change cookies to session variables through API (set session variable here)
+            props.checkLogin([true,check[1]]);
         }
         else {
             setMessage(msg);
