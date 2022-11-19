@@ -1,5 +1,5 @@
 import React from 'react';
-import { parseCookies, setCookie } from '../functions';
+import { checkCookie, parseCookies, setCookie } from '../functions';
 import Login from './Login';
 import Register from './Register';
 import Characters from './Characters';
@@ -62,7 +62,7 @@ function App() {
     }
   }
   else{
-    if (charSelected===true){
+    if (charSelected===true || checkCookie('srno',document.cookie)){
       return (<Sheet token={charSrno}/>);
     }
     else{

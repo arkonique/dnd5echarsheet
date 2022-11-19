@@ -74,3 +74,8 @@ export function setCookie(name,value,cookieString) {
   cookies[name]=value;
   document.cookie = generateCookieString(cookies);
 }
+
+export function checkCookie(name,cookieString) {
+  let cookies = parseCookies(cookieString);
+  return cookies[name]!==undefined;
+}
