@@ -63,7 +63,7 @@ function App() {
   }
   else{
     if (charSelected===true || checkCookie('srno',document.cookie)){
-      return (<Sheet token={charSrno}/>);
+      return (<Sheet/>);
     }
     else{
       return (<Characters token={token} checkSelection={(e) => makeSelection(e)}/>);

@@ -19,6 +19,15 @@ export async function getData(url=''){
     return response.json();
 }
 
+// Send file using fetch API
+export async function sendFile(url = '', data = {}) {
+  const response = await fetch(url, {
+    method: 'POST',
+    body: data
+  });
+  return response.json();
+}
+
 export function checkOcurrence(string,array) {
     return array.filter((e) =>{return e===string}).length
 }

@@ -1,11 +1,47 @@
 import React from 'react'
 import Info from './Info'
 import Portrait from './Portrait'
+import { parseCookies, postData, sendFile } from '../functions';
 
-export default function Personal(props) {
+export default function Personal() {
+
+    // default array
+    const personalArray = {
+        portrait:"peepoo.png",
+        playname:"",
+        charname:"",
+        race:"",
+        background:"",
+        alignment:"",
+        age:"",
+        height:"",
+        weight:"",
+        dmarks:"",
+        eyes:"",
+        skin:"",
+        hair:"",
+        scars:""
+    } 
+    // default array ends here
 
     const [selectedFile, setSelectedFile] = React.useState(null);
-    const [personalData,setPersonalData] = React.useState(props.dataArray)
+    const [personalData,setPersonalData] = React.useState(personalArray);
+
+    let cookies = parseCookies(document.cookie);
+
+    async function getCharacterPersonal(){
+        let data = await postData('http://localhost/dnd_api/accessnode/characters/get',{srno:cookies.srno})
+        let name = await postData('http://localhost/dnd_api/accessnode/user/token',{token:cookies.token})
+
+        data[0][0].playname=name[0].name;
+        setPersonalData(data[0][0])
+    }
+
+    React.useEffect(() => {
+        getCharacterPersonal();
+    },[])
+    
+
     
     function updateData(e) {
         var data = personalData
@@ -14,26 +50,47 @@ export default function Personal(props) {
         setPersonalData(data)
     }
 
-    function updatePortrait(e){
+    async function updatePortrait(e){
         var data = personalData
         setSelectedFile(e.files[0])
 
         // Upload file here using API
 
+        // 1. Check if file is an image
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/gif'];
+        if (!allowedTypes.includes(e.files[0].type)) {
+            alert('File type is not supported')
+            return
+        }
+        // 2. Check if file size is less than 10MB
+        if (e.files[0].size > 10 * 1024 * 1024) {
+            alert('File size is too big')
+            return
+        }
+        // 3. Create a new FormData object.
+        const formData = new FormData()
+        // 4. Append the file to the object.
+        formData.append('file', e.files[0])
+        console.log(e.files[0]);
+        // 5. Send the object to the API.
+        // 6. Get the response from the API.
+        const resp = await sendFile('http://localhost/dnd_api/accessnode/files/upload',formData)
+        // 7. Set the response to the data.portrait variable.
+        data.portrait=resp.name;
+        // 8. Set the data variable to the state variable.
+        setPersonalData(data)
         // End API call
 
-        data.portrait=e.files[0].name;
-        console.log(selectedFile)
     }
 
 
 
     return(
-        <article id="personal"> 
+        <article id="personal">
             <section id="char">
                 <Portrait src={personalData.portrait} onFileSelect={(e) => updatePortrait(e)}/>
                 <div className="names-div">
-                    <Info id="playname" value={personalData.playname} label="Player name" labeldisp={0} onEdit={(e) => updateData(e)}/>
+                    <div id="player"><span id="playname-label">Player</span><span id="playname">{personalData.playname}</span></div>
                     <Info id="charname" value={personalData.charname} label="Character name" labeldisp={0} onEdit={(e) => updateData(e)}/>
                 </div>
             </section>

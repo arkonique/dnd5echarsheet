@@ -7,9 +7,13 @@ export default function Info(props) {
         props.onEdit({value:e.target.value,id:e.target.name})
     }
 
+    React.useEffect(() => {
+        setValue(props.value)
+    },[props.value])
+
     return(
         <label className="info" id={props.id}>
-            {(props.labeldisp)?props.label:""}
+            {props.labeldisp ? <span className="label">{props.label}</span> : null}
             <input type="text" value={inputValue} name={props.id} onChange={updateVal} placeholder={(props.labeldisp)?"":props.label}></input>
         </label>
     )

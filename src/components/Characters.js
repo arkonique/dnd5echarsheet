@@ -15,8 +15,7 @@ export default function Characters(props){
         const [characters,setCharacters] = React.useState([]);
 
         async function getCharacters(){
-            const data = await postData('http://localhost/dnd_api/accessnode/characters/get',{token:utoken})
-            console.log(data);
+            const data = await postData('http://localhost/dnd_api/accessnode/characters/list',{token:utoken})
             setCharacters(data);
         }
 

@@ -1,6 +1,11 @@
 import React from "react"
-
 export default function Portrait(props){
+    const [image,setImage] = React.useState("")
+
+    
+    React.useEffect(() => {
+        ((src) => {import(`../../src/img/${src}`).then((img) => {setImage(img.default)})})(props.src)
+    },[props.src])
 
     function changeHandler(e){
         props.onFileSelect(e.target);
@@ -8,7 +13,7 @@ export default function Portrait(props){
 
     return(
         <label className="img-file">
-            <img src={props.src} alt="Character Portrait"></img>
+            {image && <img src={image} alt="Character Portrait"/>}
             <input type="file" id="p-loader" onChange={changeHandler} style={{"display": "none"}}></input>
         </label>
     )
